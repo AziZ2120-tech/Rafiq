@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رفيق</title>
+<meta name="description" content="رفيق: رفيقك المحلي يقترح لك أماكن قريبة على ذوقك.">
+<meta name="theme-color" content="#176b56">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="رفيق">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: one phone-sized chat column. Rafiq leads with questions; a profile sheet slides over the chat. */
+:root{
+  --bg:#eceee9; --surface:#ffffff; --surface-2:#f2f5f1; --line:#e3e8e2;
+  --fg:#1f2b27; --muted:#66726c; --accent:#176b56; --accent-fg:#ffffff;
+  --accent-soft:#dcefe5; --warn:#8a6420; --link:#2f6f52;
+  --font:'IBM Plex Sans Arabic','Geeza Pro','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101714; --surface:#17211d; --surface-2:#1e2b26; --line:#2a3a33;
+  --fg:#e6efea; --muted:#92a39b; --accent:#4cb48b; --accent-fg:#0b1a14;
+  --accent-soft:#1f3a2f; --warn:#e0b968; --link:#7fcfa8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101714; --surface:#17211d; --surface-2:#1e2b26; --line:#2a3a33;
+  --fg:#e6efea; --muted:#92a39b; --accent:#4cb48b; --accent-fg:#0b1a14;
+  --accent-soft:#1f3a2f; --warn:#e0b968; --link:#7fcfa8; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);
+  padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;justify-content:center}
+button{font-family:inherit}
+.phone{position:relative;width:min(100%,440px);height:100%;min-height:0;display:flex;flex-direction:column;background:var(--surface);
+  border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:0 20px 60px rgba(20,40,30,.12)}
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 16px 10px}
+.mark{width:40px;height:40px;border-radius:13px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:23px;flex:none}
+.brand{min-width:0}
+.brand b{display:block;font-size:19px;font-weight:700}
+.brand span{font-size:11px;color:var(--muted)}
+.tools{margin-inline-start:auto;display:flex;gap:6px}
+.tool{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:9px;height:32px;min-width:32px;padding:0 10px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.tool:hover{border-color:var(--accent)}
+.tool.primary{border-color:var(--accent);color:var(--accent)}
+.tool:focus-visible,.chip:focus-visible,.send:focus-visible,#q:focus-visible,.card a:focus-visible,.row button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pills{display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;scrollbar-width:none;min-height:34px;align-items:center}
+.pills::-webkit-scrollbar{display:none}
+.pill{flex:none;font-size:11px;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600;white-space:nowrap}
+.pill.ghost{background:var(--surface-2);color:var(--muted);font-weight:500}
+.meter{height:3px;background:var(--surface-2)}
+.meter i{display:block;height:100%;background:var(--accent);width:0;transition:width .4s}
+.convo{flex:1;min-height:0;overflow:auto;padding:16px 14px 8px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;gap:9px;align-items:flex-start}
+.msg.user{justify-content:flex-end}
+.av{width:28px;height:28px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:16px;flex:none}
+.bubble{max-width:84%;padding:10px 13px;border-radius:16px;border-start-start-radius:4px;background:var(--surface-2);font-size:14px;line-height:1.7;min-width:0;overflow-wrap:anywhere}
+.user .bubble{background:var(--accent);color:var(--accent-fg);border-start-start-radius:16px;border-start-end-radius:4px}
+.dots{display:inline-flex;gap:4px;align-items:center;height:22px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1s infinite ease-in-out}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.chips{margin-inline-start:37px;display:flex;flex-wrap:wrap;gap:7px}
+.chip{font:500 13px var(--font);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:8px 14px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.chip.go{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.chip.ghost{color:var(--muted)}
+.results{margin-inline-start:37px;display:grid;gap:8px}
+.results h2{margin:0;font-size:15px;font-weight:700}
+.results .sub{font-size:11px;color:var(--muted)}
+.card{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:10px;min-width:0}
+.ico{width:40px;height:40px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center;font-size:19px;flex:none}
+.info{flex:1;min-width:0}
+.info h3{margin:0 0 3px;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.info p{margin:0;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.info .why{color:var(--accent);margin-top:3px;white-space:normal}
+.meta{text-align:end;flex:none;display:grid;gap:3px;justify-items:end}
+.meta b{font-size:12px;color:var(--accent);font-variant-numeric:tabular-nums}
+.meta a{font-size:11px;color:var(--link);text-decoration:none}
+.src{font-size:10px;padding:1px 7px;border-radius:99px;background:var(--surface-2);color:var(--muted)}
+.src.live{background:var(--accent-soft);color:var(--accent)}
+.note{font-size:11px;color:var(--muted);margin:0;line-height:1.7}
+.sys{align-self:center;font-size:11px;color:var(--warn);text-align:center;max-width:90%;line-height:1.7}
+.composer{margin:6px 14px 0;display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2)}
+#q{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--fg);font:15px var(--font)}
+#q::placeholder{color:var(--muted)}
+.send{width:34px;height:34px;border:0;border-radius:10px;cursor:pointer;font-size:18px;line-height:1;flex:none;background:var(--accent);color:var(--accent-fg);transform:scaleX(-1)}
+.foot{padding:8px 18px 14px;font-size:10px;color:var(--muted);text-align:center}
+/* Profile sheet */
+.sheet{position:absolute;inset:0;background:var(--surface);display:flex;flex-direction:column;z-index:5}
+.sheet[hidden]{display:none}
+.sheet header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.sheet h2{margin:0;font-size:17px;font-weight:700}
+.sheet .body{flex:1;min-height:0;overflow:auto;padding:14px 16px 24px;display:grid;gap:18px;align-content:start}
+.sheet h3{margin:0 0 8px;font-size:12px;font-weight:700;color:var(--muted)}
+.big{display:flex;align-items:baseline;gap:8px}
+.big b{font-size:32px;font-weight:700;color:var(--accent)}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.row .t{min-width:0}
+.row .t b{display:block;font-size:13px}
+.row .t span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.row .w{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.row button{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--link);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+.locked{font-size:12px;color:var(--muted);line-height:1.8}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+summary{cursor:pointer;font-size:12px;font-weight:600}
+pre{direction:ltr;text-align:left;font-size:10.5px;line-height:1.5;overflow:auto;max-height:260px;margin:8px 0 0;white-space:pre-wrap;color:var(--fg)}
+@media (max-width:480px){
+  body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+  .phone{border-radius:0;border:0;box-shadow:none}
+}
+@media (prefers-reduced-motion:reduce){.dots i{animation:none;opacity:.6}.meter i{transition:none}}
+</style>
+
+</head>
+<body>
+<main class="phone">
+  <header class="topbar">
+    <div class="mark" aria-hidden="true">ر</div>
+    <div class="brand"><b>رفيق</b><span>رفيقك المحلي</span></div>
+    <div class="tools">
+      <button class="tool primary" id="profBtn" type="button"></button>
+      <button class="tool" id="resetBtn" type="button" aria-label="ابدأ من جديد" title="ابدأ من جديد">↺</button>
+    </div>
+  </header>
+  <div class="pills" id="pills"></div>
+  <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
+  <section class="convo" id="convo" aria-live="polite"></section>
+  <form class="composer" id="form">
+    <input id="q" type="text" autocomplete="off" placeholder="اكتب لرفيق…">
+    <button class="send" type="submit" aria-label="إرسال">↑</button>
+  </form>
+  <footer class="foot">ساعات العمل غير مؤكدة</footer>
+
+  <section class="sheet" id="sheet" hidden aria-label="ملفي">
+    <header><h2>ملفي</h2><button class="tool" id="closeSheet" type="button" style="margin-inline-start:auto">رجوع</button></header>
+    <div class="body" id="sheetBody"></div>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ar = (n) => Number(n).toLocaleString('ar-SA');
+
+/* =====================================================================
+   1) QUESTION BANK  (data only: what to ask, when, and what it changes)
+   scope: context = changes every outing, core = stays in the profile
+   affects: which part of the search the answer actually drives
+   ===================================================================== */
+const KINDS = ['restaurant', 'cafe', 'culture', 'outdoors'];
+const QUESTIONS = [
+  { id: 'ctx.mode', scope: 'context', title: 'وضعك الحين', weight: 0, type: 'single', intent: 'ask_mode', affects: 'flow',
+    options: [
+      { value: 'daily', label: 'يوم عادي', words: ['عادي', 'يومي', 'روتين', 'daily', 'normal'] },
+      { value: 'vacation', label: 'إجازة', words: ['اجازه', 'سياحه', 'سفر', 'vacation', 'holiday', 'trip'] },
+      { value: 'work', label: 'رحلة شغل', words: ['شغل', 'عمل', 'دوام', 'work', 'business'] }] },
+  { id: 'ctx.time', scope: 'context', title: 'وقتك', weight: 0, type: 'single', intent: 'ask_time', affects: 'radius', needsSource: 'osm',
+    options: [
+      { value: 'quick', label: 'ساعة أو أقل', words: ['اقل', 'سريع', 'شوي', 'quick'], radius: 800 },
+      { value: 'normal', label: 'كم ساعة', words: ['ساعتين', 'كم ساعه', 'ثلاث', 'متوسط', 'couple'], radius: 1500 },
+      { value: 'free', label: 'الوقت مفتوح', words: ['مفتوح', 'كثير', 'طويل', 'فاضي', 'free'], radius: 3000 }] },
+  { id: 'core.interests', scope: 'core', domain: 'taste', title: 'اهتماماتك', weight: 30, type: 'multi', intent: 'ask_interests', affects: 'filter', needsSource: 'osm',
+    options: [
+      { value: 'restaurant', label: 'أكل', words: ['اكل', 'مطعم', 'مطاعم', 'عشا', 'غدا', 'فطور', 'جوعان', 'برجر', 'شاورما', 'eat', 'food', 'restaurant', 'dinner', 'lunch', 'hungry'] },
+      { value: 'cafe', label: 'قهوة وحلا', words: ['قهوه', 'كوفي', 'كافيه', 'مقهي', 'حلا', 'حلي', 'شاي', 'coffee', 'cafe', 'dessert', 'tea'] },
+      { value: 'culture', label: 'ثقافة ومعالم', words: ['متحف', 'ثقافه', 'معلم', 'معالم', 'فن', 'تاريخ', 'سياحه', 'museum', 'culture', 'sight', 'art', 'history'] },
+      { value: 'outdoors', label: 'طبيعة وجو حلو', words: ['طبيعه', 'حديقه', 'حدايق', 'مشي', 'هوا', 'بحر', 'منتزه', 'park', 'outdoor', 'nature', 'walk'] }],
+    anyWords: ['اي شي', 'كل شي', 'فاجئني', 'anything', 'surprise'] },
+  { id: 'food.cuisine', scope: 'core', domain: 'food', title: 'نوع الأكل', weight: 15, type: 'multi', intent: 'ask_cuisine', affects: 'ranking', needsSource: 'osm',
+    requires: { interests: ['restaurant'] },
+    options: [
+      { value: 'local', label: 'محلي وتاباس', words: ['محلي', 'تاباس', 'اسباني', 'local', 'tapas', 'spanish'], osm: ['catalan', 'spanish', 'tapas', 'mediterranean', 'regional'] },
+      { value: 'seafood', label: 'بحري', words: ['بحري', 'سمك', 'seafood', 'fish'], osm: ['seafood', 'fish'] },
+      { value: 'arab', label: 'شرقي وعربي', words: ['شرقي', 'عربي', 'لبناني', 'تركي', 'كباب', 'arab', 'lebanese', 'turkish', 'kebab'], osm: ['lebanese', 'arab', 'middle_eastern', 'turkish', 'kebab', 'shawarma', 'syrian'] },
+      { value: 'asian', label: 'آسيوي', words: ['اسيوي', 'سوشي', 'صيني', 'هندي', 'asian', 'sushi', 'chinese', 'indian', 'thai'], osm: ['asian', 'chinese', 'japanese', 'sushi', 'thai', 'indian', 'korean', 'ramen'] },
+      { value: 'italian', label: 'إيطالي', words: ['ايطالي', 'بيتزا', 'باستا', 'italian', 'pizza', 'pasta'], osm: ['italian', 'pizza', 'pasta'] },
+      { value: 'burger', label: 'برجر وسريع', words: ['برجر', 'سريع', 'burger', 'fast'], osm: ['burger', 'american', 'sandwich', 'fast_food'] }] },
+  { id: 'food.halal', scope: 'core', domain: 'food', title: 'الأكل الحلال', weight: 15, type: 'single', intent: 'ask_halal', affects: 'ranking', needsSource: 'osm',
+    sensitive: true, requires: { interests: ['restaurant'] },
+    options: [
+      { value: 'yes', label: 'أفضّل الحلال', words: ['حلال', 'نعم', 'ايوه', 'yes', 'halal'] },
+      { value: 'any', label: 'ما يفرق', words: ['ما يفرق', 'عادي', 'لا', 'no', 'any'] }] },
+  { id: 'core.allergy', scope: 'core', domain: 'food', title: 'الحساسية', weight: 10, type: 'multi', intent: 'ask_allergy', affects: 'dishes',
+    sensitive: true, requires: { interests: ['restaurant'] },
+    options: [
+      { value: 'shellfish', label: 'قشريات', words: ['قشريات', 'جمبري', 'روبيان', 'كابوريا', 'shrimp', 'crab', 'shellfish', 'lobster'] },
+      { value: 'molluscs', label: 'رخويات (حبار، محار)', words: ['رخويات', 'حبار', 'اخطبوط', 'محار', 'سبيط', 'squid', 'octopus', 'mussels', 'clam'] },
+      { value: 'fish', label: 'سمك', words: ['سمك', 'fish'] },
+      { value: 'nuts', label: 'مكسرات', words: ['مكسرات', 'فستق', 'لوز', 'صنوبر', 'nuts', 'peanut'] },
+      { value: 'gluten', label: 'جلوتين', words: ['جلوتين', 'قمح', 'gluten', 'wheat'] },
+      { value: 'none', label: 'ما عندي', words: ['ما عندي', 'لا شي', 'مافي', 'none', 'no'] }] },
+  { id: 'core.seating', scope: 'core', domain: 'food', title: 'الجلسة', weight: 10, type: 'single', intent: 'ask_seating', affects: 'ranking', needsSource: 'osm',
+    requires: { interests: ['restaurant', 'cafe'] },
+    options: [
+      { value: 'outdoor', label: 'أفضّل جلسة برا', words: ['برا', 'خارج', 'outdoor', 'outside'] },
+      { value: 'any', label: 'ما يفرق', words: ['ما يفرق', 'عادي', 'اي مكان', 'any'] }] },
+  { id: 'core.pace', scope: 'core', domain: 'style', title: 'إيقاعك', weight: 10, type: 'single', intent: 'ask_pace', affects: 'order',
+    options: [
+      { value: 'relaxed', label: 'هادي ومرتاح', words: ['هادي', 'مرتاح', 'بطيء', 'relaxed', 'calm', 'slow'] },
+      { value: 'active', label: 'نشيط', words: ['نشيط', 'حماس', 'متحرك', 'active', 'busy'] }] },
+  { id: 'core.company', scope: 'core', domain: 'style', title: 'المرافقين', weight: 10, type: 'single', intent: 'ask_company', affects: 'order',
+    options: [
+      { value: 'alone', label: 'لحالي', words: ['لحالي', 'وحدي', 'لوحدي', 'alone', 'solo'] },
+      { value: 'friends', label: 'مع الأصحاب', words: ['اصحاب', 'اصدقاء', 'ربع', 'صديق', 'friends'] },
+      { value: 'family', label: 'مع العايلة', words: ['عايله', 'عائله', 'عيال', 'اهل', 'اطفال', 'family', 'kids'] },
+      { value: 'partner', label: 'مع شريكي', words: ['شريك', 'زوج', 'زوجه', 'خطيب', 'حبيب', 'partner', 'wife', 'husband'] }] }
+];
+/* Questions we do not ask yet because no current data source can use the answer. */
+const LOCKED = [
+  { title: 'الميزانية', reason: 'تحتاج مصدراً فيه الأسعار' },
+  { title: 'مفتوح الآن؟', reason: 'تحتاج مصدراً بساعات عمل مؤكدة' },
+  { title: 'هل المطعم مشهور بالطبق؟', reason: 'تحتاج مصدر التعليقات (الخطوة الجاية)' }
+];
+
+/* Level 2: signature dishes. Dish names and descriptions come from the sources below.
+   The allergen lists are my own conservative estimate, not from the sources. Always ask the restaurant. */
+const SRC = {
+  wiki: { t: 'ويكيبيديا', u: 'https://en.wikipedia.org/wiki/Catalan_cuisine' },
+  voyage: { t: 'ويكي سفر', u: 'https://en.wikivoyage.org/wiki/Barcelona' }
+};
+const ALLERGEN_AR = { shellfish: 'قشريات', molluscs: 'رخويات', fish: 'سمك', nuts: 'مكسرات', gluten: 'جلوتين' };
+const DISHES = [
+  { id: 'esqueixada', cuisine: 'seafood', name: 'Esqueixada', ar: 'إسكيشادا', desc: 'سلطة سمك القد المملح مع الطماطم والبصل', src: 'wiki', allergens: ['fish'] },
+  { id: 'suquet', cuisine: 'seafood', name: 'Suquet de peix', ar: 'سوكيت', desc: 'يخنة من المأكولات البحرية على الطريقة الكتالونية', src: 'wiki', allergens: ['fish', 'shellfish', 'molluscs'] },
+  { id: 'bacalla', cuisine: 'seafood', name: 'Bacallà amb panses i pinyons', ar: 'سمك القد بالزبيب والصنوبر', desc: 'سمك القد المطبوخ مع الزبيب والصنوبر', src: 'wiki', allergens: ['fish', 'nuts'] },
+  { id: 'tonyina', cuisine: 'seafood', name: 'Tonyina en escabetx', ar: 'تونة بالإسكابيتشي', desc: 'تونة مخللة ومتبلة بالخل', src: 'wiki', allergens: ['fish'] },
+  { id: 'arros_negre', cuisine: 'seafood', name: 'Arròs negre', ar: 'أرز أسود', desc: 'أرز ملوّن بحبر الحبار', src: 'voyage', allergens: ['molluscs', 'fish'], areaHint: 'حي برشلونيتا (Barceloneta) لأطباق الأرز والأسماك' },
+  { id: 'arros_muntanya', cuisine: 'seafood', name: 'Arròs mar i muntanya', ar: 'أرز البحر والجبل', desc: 'أرز يجمع اللحم مع المأكولات البحرية', src: 'wiki', allergens: ['shellfish', 'molluscs', 'fish'] },
+  { id: 'pa_tomaquet', cuisine: 'local', name: 'Pa amb tomàquet', ar: 'خبز بالطماطم', desc: 'خبز مدعوك بالطماطم وزيت الزيتون', src: 'wiki', allergens: ['gluten'] },
+  { id: 'escalivada', cuisine: 'local', name: 'Escalivada', ar: 'إسكاليفادا', desc: 'فلفل وباذنجان وبصل مشوي', src: 'wiki', allergens: [] },
+  { id: 'botifarra', cuisine: 'local', name: 'Botifarra amb mongetes', ar: 'بوتيفارا مع الفاصوليا', desc: 'سجق لحم خنزير يقدَّم عادة مع الفاصوليا', src: 'wiki', allergens: [], pork: true }
+];
+
+/* =====================================================================
+   2) PERSONA  (voice only: wording, tone rules; swap this file for a new character)
+   ===================================================================== */
+const PERSONA = {
+  id: 'rafiq-core', dialect: 'saudi-white',
+  traits: { warmth: 0.9, humor: 0.4, formality: 0.2, brevity: 0.8 },
+  rules: ['سؤال واحد في كل رسالة', 'اعترف بالجواب قبل السؤال التالي', 'اشرح ليش تسأل', 'دايماً فيه خيار «بعدين»', 'جمل قصيرة تنقرأ بصوت طبيعي'],
+  phrases: {
+    greet: ['هلا والله! أنا رفيق. أحب أعرف ذوقك عشان ترشيحاتي تجي على مزاجك فعلاً. بسألك على مهل، وتقدر تقول «بعدين» لأي سؤال.'],
+    welcome_back: ['أهلاً فيك من جديد! ذوقك محفوظ عندي. بس أتأكد من وضعك اليوم.'],
+    ask_mode: ['قبل لا أرشح لك شي، وين أنت الحين؟ يوم عادي، إجازة، ولا رحلة شغل؟'],
+    ask_time: {
+      daily: ['كم عندك وقت اليوم؟ عشان أرشح لك على قدره.'],
+      vacation: ['يا حظك! كم بتتمشى اليوم؟ عشان أوزع لك الأماكن على قدر وقتك.'],
+      work: ['الله يعطيك العافية! كم ساعة فاضية عندك؟ أبي أرشح لك شي ما يتعبك.']
+    },
+    ask_interests: ['وش اللي ياخذ عقلك؟ اختر أكثر من شي وبعدين اضغط «تمام»، أو اكتب بكلامك.'],
+    ask_cuisine: ['أكيد بنأكل. وش نوع الأكل اللي تميل له؟ اختر اللي تبي.'],
+    ask_halal: ['عشان أرتب لك الأماكن صح: تفضّل الأكل الحلال؟ جاوب لو تحب، وتقدر تتخطى.'],
+    ask_seating: ['تحب تجلس برا لو الجو حلو؟'],
+    ask_pace: ['وإيقاعك في الطلعة؟ تحب هادي ومرتاح ولا نشيط وحركة؟'],
+    ask_company: ['ومع مين تطلع غالباً؟'],
+    ask_allergy: ['قبل لا أقترح لك أطباق: في شي ما تقدر تاكله أو تتحسس منه؟ اختياري، وجوابك يبقى على جهازك بس.'],
+    dish_intro: ['في برشلونة فيه أطباق معروفة لنوع الأكل اللي تحبه. نمشي عليها واحد واحد.'],
+    dish_next: ['وهذا طبق ثاني:', 'طبق ثاني:'],
+    dish_search: ['أبشر! خلني أدور لك على مطاعم قريبة تناسب ذوقك.'],
+    ask_dish_wish: ['وش اللي في بالك؟ اكتب اسم الطبق أو نوعه وأسجله.'],
+    wish_ack: ['سجلتها. لما نربط التعليقات أدور عليها لك.'],
+    ack: ['تمام.', 'حلو!', 'أبشر.', 'ممتاز.', 'زين.'],
+    skip_ack: ['ولا يهمك، نرجع له بعدين.', 'على راحتك.'],
+    retry: ['ما مسكتها زين. اختر من الخيارات تحت، أو قل «بعدين».'],
+    lead_in: ['سؤال سريع يضبط ترشيحاتي الجاية:', 'عشان أعرفك أكثر:'],
+    rerank: ['خلني أرتب لك النتائج من جديد على ذوقك.'],
+    more: ['تبي أدور على شي ثاني؟'],
+    none: ['ما لقيت أماكن مسماة على الخريطة قريبة من هنا لهذا النوع. جرب نوع ثاني.'],
+    idle: ['أفهمك أكثر لو قلت لي النوع: أكل، قهوة، ثقافة، أو طبيعة.']
+  }
+};
+const lastPick = {};
+function phrase(key, sub) {
+  let list = PERSONA.phrases[key]; if (sub && !Array.isArray(list)) list = list[sub];
+  if (!list || !list.length) return '';
+  const k = key + (sub || ''); let i = Math.floor(Math.random() * list.length);
+  if (list.length > 1 && i === lastPick[k]) i = (i + 1) % list.length;
+  lastPick[k] = i; return list[i];
+}
+
+/* =====================================================================
+   3) USER PROFILE  (answers only; context is per session, core is saved)
+   ===================================================================== */
+let answers = {};                       // core answers: { 'core.interests': ['cafe'], ... }
+const session = { 'ctx.mode': null, 'ctx.time': null, skip: new Set(), searched: false };
+let pending = null, lastKind = null, busy = false, gen = 0, selection = new Set();
+const pos = { lat: 41.3851, lon: 2.1734, label: 'central Barcelona' };
+const Q = (id) => QUESTIONS.find((q) => q.id === id);
+const answered = (id) => { const v = answers[id]; return Array.isArray(v) ? v.length > 0 : !!v; };
+try { const s = JSON.parse(localStorage.getItem('rafiq.answers.v2') || 'null'); if (s && typeof s === 'object') answers = s; } catch (e) {}
+const saveAnswers = () => { try { localStorage.setItem('rafiq.answers.v2', JSON.stringify(answers)); } catch (e) {} };
+
+function applies(q) {
+  if (!q.requires) return true;
+  const have = answers['core.interests'] || [];
+  return q.requires.interests.some((k) => have.includes(k));
+}
+function completion() {
+  const list = QUESTIONS.filter((q) => q.scope === 'core' && applies(q));
+  const total = list.reduce((s, q) => s + q.weight, 0);
+  const done = list.filter((q) => answered(q.id)).reduce((s, q) => s + q.weight, 0);
+  return total ? Math.round((done / total) * 100) : 0;
+}
+function nextCore() {
+  return QUESTIONS.filter((q) => q.scope === 'core' && applies(q) && !answered(q.id) && !session.skip.has(q.id))
+    .sort((a, b) => b.weight - a.weight)[0] || null;
+}
+const radius = () => { const o = Q('ctx.time').options.find((x) => x.value === session['ctx.time']); return o ? o.radius : 1500; };
+const label = (id, v) => (Q(id).options.find((o) => o.value === v) || {}).label || v;
+
+/* ---------- Dish layer helpers ---------- */
+const dishById = (id) => DISHES.find((d) => d.id === id);
+function dishOk(d) {
+  const al = answers['core.allergy'] || [];
+  if (d.allergens.some((a) => al.includes(a))) return false;       // never suggest a dish that may contain a stated allergen
+  if (d.pork && answers['food.halal'] === 'yes') return false;
+  return true;
+}
+function eligibleDishes() {
+  const cu = answers['food.cuisine'] || [];
+  if (!answered('core.allergy') || !cu.length) return [];
+  return DISHES.filter((d) => cu.includes(d.cuisine) && dishOk(d));
+}
+function nextDish() {
+  if (!answered('core.allergy')) return null;                        // no dish suggestions until we know about allergies
+  const likes = answers['dish.likes'] || [], avoid = answers['dish.avoid'] || [];
+  const d = eligibleDishes().find((x) => !likes.includes(x.id) && !avoid.includes(x.id) && !session.skip.has('dish.' + x.id));
+  if (!d) return null;
+  return { id: 'dish.' + d.id, scope: 'dish', type: 'single', dish: d, title: d.ar, intent: 'ask_dish',
+    options: [
+      { value: 'yes', label: 'أبي أجربه', words: ['ايوه', 'نعم', 'ابي', 'yes', 'تمام', 'اجربه'] },
+      { value: 'no', label: 'مو لي', words: ['لا', 'مو', 'no', 'ما ابي', 'ما احب'] },
+      { value: 'other', label: 'شي ثاني في بالي', words: ['ثاني', 'غيره', 'other'] }] };
+}
+
+/* Which kind to search first and what to suggest next, shaped by pace and company. */
+const BIAS = {
+  pace: { relaxed: { cafe: 2, outdoors: 1, culture: 1 }, active: { outdoors: 2, culture: 1 } },
+  company: { alone: { cafe: 1, culture: 1 }, friends: { restaurant: 2 }, family: { outdoors: 2, restaurant: 1 }, partner: { restaurant: 2, culture: 1, cafe: 1 } }
+};
+function orderedKinds() {
+  const mine = answers['core.interests'] || KINDS;
+  const score = (k) => (BIAS.pace[answers['core.pace']] || {})[k] || 0 + ((BIAS.company[answers['core.company']] || {})[k] || 0);
+  const s = (k) => ((BIAS.pace[answers['core.pace']] || {})[k] || 0) + ((BIAS.company[answers['core.company']] || {})[k] || 0);
+  return mine.slice().sort((a, b) => s(b) - s(a) || mine.indexOf(a) - mine.indexOf(b));
+}
+
+/* ---------- Normalising and matching free text ---------- */
+const norm = (s) => String(s).toLowerCase().replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي')
+  .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+function wordHit(n, tokens, w) { const x = norm(w); return x.length <= 2 ? tokens.includes(x) : n.includes(x); }
+function parseOptions(q, text) {
+  const n = norm(text), tokens = n.split(/\s+/);
+  if (q.anyWords && q.anyWords.some((w) => wordHit(n, tokens, w))) return q.options.map((o) => o.value);
+  const hits = q.options.filter((o) => o.words.some((w) => wordHit(n, tokens, w))).map((o) => o.value);
+  return q.type === 'multi' ? hits : hits.slice(0, 1);
+}
+const SKIP_WORDS = ['بعدين', 'تخطي', 'تخطى', 'skip', 'later', 'ما ابي', 'مو الحين'];
+const isSkip = (text) => { const n = norm(text); return SKIP_WORDS.some((w) => n.includes(norm(w))); };
+
+/* =====================================================================
+   4) CHAT UI
+   ===================================================================== */
+const convo = () => $('#convo');
+const scroll = () => { const c = convo(); c.scrollTop = c.scrollHeight; };
+const clearChips = () => document.querySelectorAll('.chips').forEach((c) => c.remove());
+function addUser(text) {
+  clearChips();
+  const d = document.createElement('div'); d.className = 'msg user';
+  d.innerHTML = `<div class="bubble">${esc(text)}</div>`; convo().appendChild(d); scroll();
+}
+async function say(text, delay = 600) {
+  const my = gen;
+  const d = document.createElement('article'); d.className = 'msg';
+  d.innerHTML = '<div class="av" aria-hidden="true">ر</div><div class="bubble"><span class="dots"><i></i><i></i><i></i></span></div>';
+  convo().appendChild(d); scroll();
+  await sleep(delay);
+  if (my !== gen) { d.remove(); return; }
+  d.querySelector('.bubble').textContent = text; scroll();
+}
+function sys(text) { const p = document.createElement('p'); p.className = 'sys'; p.textContent = text; convo().appendChild(p); scroll(); }
+function addChips(items) {
+  clearChips();
+  const wrap = document.createElement('div'); wrap.className = 'chips';
+  items.forEach((it) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (it.cls ? ' ' + it.cls : ''); b.textContent = it.label;
+    if (it.toggle) b.setAttribute('aria-pressed', String(selection.has(it.value)));
+    b.addEventListener('click', () => {
+      if (it.toggle) { const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); on ? selection.add(it.value) : selection.delete(it.value); return; }
+      it.onClick();
+    });
+    wrap.appendChild(b);
+  });
+  convo().appendChild(wrap); scroll();
+}
+function renderHeader() {
+  const pills = [];
+  if (session['ctx.mode']) pills.push(label('ctx.mode', session['ctx.mode']));
+  if (session['ctx.time']) pills.push(label('ctx.time', session['ctx.time']));
+  (answers['core.interests'] || []).forEach((k) => pills.push(label('core.interests', k)));
+  ['food.cuisine'].forEach((id) => (answers[id] || []).forEach((v) => pills.push(label(id, v))));
+  (answers['dish.likes'] || []).forEach((id) => { const d = dishById(id); if (d) pills.push(d.ar); });
+  ['food.halal', 'core.seating', 'core.pace', 'core.company'].forEach((id) => { if (answers[id] && answers[id] !== 'any') pills.push(label(id, answers[id])); });
+  $('#pills').innerHTML = pills.length ? pills.map((p) => `<span class="pill">${esc(p)}</span>`).join('') : '<span class="pill ghost">ذوقك بيظهر هنا</span>';
+  const pct = completion();
+  $('#meterFill').style.width = pct + '%';
+  $('#profBtn').textContent = `ملفي · ${ar(pct)}٪`;
+}
+
+/* =====================================================================
+   5) ENGINE  (picks the next question, stores answers, runs the search)
+   ===================================================================== */
+function promptFor(q) {
+  if (q.dish) {
+    const d = q.dish, head = session.dishIntro ? phrase('dish_next') : phrase('dish_intro');
+    session.dishIntro = true;
+    return `${head} «${d.ar}» (${d.name}): ${d.desc}. تبي تجربه؟`;
+  }
+  const key = q.intent;
+  const p = PERSONA.phrases[key];
+  return Array.isArray(p) ? phrase(key) : phrase(key, session['ctx.mode'] || 'daily');
+}
+function showChips(q, extra) {
+  selection = new Set(q.scope === 'core' && Array.isArray(answers[q.id]) ? answers[q.id] : []);
+  const items = (q.options || []).map((o) => q.type === 'multi'
+    ? { label: o.label, value: o.value, toggle: true }
+    : { label: o.label, onClick: () => { addUser(o.label); choose(q, [o.value]); } });
+  if (q.type === 'multi') items.push({ label: 'تمام', cls: 'go', onClick: () => {
+    const vals = [...selection]; if (!vals.length) { say(phrase('retry'), 300); return; }
+    addUser(vals.map((v) => label(q.id, v)).join('، ')); choose(q, vals); } });
+  if (q.scope === 'core' || q.scope === 'dish' || q.id === 'ctx.time') items.push({ label: 'بعدين', cls: 'ghost', onClick: () => { addUser('بعدين'); skip(q); } });
+  if (extra) items.push({ label: 'دور لي على شي ثاني', cls: 'ghost', onClick: () => { addUser('دور لي على شي ثاني'); pending = null; offerKinds(); } });
+  addChips(items);
+}
+async function ask(q, extra) {
+  pending = q;
+  await say(promptFor(q), 550);
+  if (pending === q) { if (q.dish) dishNote(q.dish); showChips(q, extra); }
+}
+function dishNote(d) {
+  const s = SRC[d.src];
+  const al = d.allergens.map((a) => ALLERGEN_AR[a]).concat(d.pork ? ['لحم خنزير'] : []);
+  const p = document.createElement('p'); p.className = 'note'; p.style.marginInlineStart = '37px';
+  p.innerHTML = `المصدر: <a href="${s.u}" target="_blank" rel="noreferrer">${esc(s.t)}</a>${al.length ? ' · قد يحتوي: ' + esc(al.join('، ')) : ''} · المكونات تقدير مني، اسأل المطعم عن الحساسية.`;
+  convo().appendChild(p); scroll();
+}
+async function chooseDish(q, v) {
+  const d = q.dish;
+  const push = (id) => { answers[id] = answers[id] || []; if (!answers[id].includes(d.id)) answers[id].push(d.id); };
+  if (v === 'yes') push('dish.likes'); else if (v === 'no') push('dish.avoid'); else session.skip.add(q.id);
+  saveAnswers(); renderHeader();
+  await say(phrase('ack'), 350);
+  if (v === 'other') return ask({ id: 'dish.wish', scope: 'dish', type: 'text', intent: 'ask_dish_wish' }, true);
+  if (v === 'yes' && !session.dishSearched) {
+    session.dishSearched = true;
+    await say(phrase('dish_search'), 450); await search('restaurant');
+    sys(`ما أقدر أتأكد إن هذي الأماكن تقدم «${d.ar}». التأكد من التعليقات في الخطوة الجاية.` + (d.areaHint ? ` ويكي سفر يذكر ${d.areaHint}.` : ''));
+  }
+  return afterSearch();
+}
+async function choose(q, values) {
+  pending = null;
+  if (q.scope === 'dish') return chooseDish(q, values[0]);
+  if (values.includes('none') && values.length > 1) values = values.filter((v) => v !== 'none');
+  if (q.scope === 'context') session[q.id] = values[0];
+  else { answers[q.id] = q.type === 'multi' ? values : values[0]; saveAnswers(); }
+  renderHeader();
+  await say(phrase('ack'), 350);
+  if (q.scope === 'context' || q.id === 'core.interests') return advance();
+  if (q.affects === 'ranking' && lastKind) { await say(phrase('rerank'), 400); await search(lastKind); }
+  return afterSearch();
+}
+async function skip(q) {
+  pending = null; session.skip.add(q.id);
+  if (q.id === 'ctx.mode') session['ctx.mode'] = 'daily';
+  await say(phrase('skip_ack'), 350);
+  return session.searched ? afterSearch() : advance();
+}
+async function advance() {
+  if (!session['ctx.mode']) return ask(Q('ctx.mode'));
+  if (!session['ctx.time'] && !session.skip.has('ctx.time')) return ask(Q('ctx.time'));
+  if (!answered('core.interests')) return ask(Q('core.interests'));
+  if (!session.searched) { session.searched = true; await search(orderedKinds()[0]); }
+  return afterSearch();
+}
+async function afterSearch() {
+  const q = nextCore();
+  if (q) { await say(phrase('lead_in'), 450); return ask(q, true); }
+  const dq = nextDish();
+  if (dq) return ask(dq, true);
+  return offerKinds();
+}
+async function offerKinds() {
+  await say(phrase('more'), 450);
+  const ks = orderedKinds().concat(KINDS.filter((k) => !(answers['core.interests'] || []).includes(k)));
+  addChips([...ks.filter((k) => k !== lastKind).slice(0, 3).map((k) => ({ label: label('core.interests', k), onClick: async () => { addUser(label('core.interests', k)); await search(k); afterSearch(); } })),
+    { label: 'ملفي', cls: 'ghost', onClick: openSheet }]);
+}
+async function handle(text) {
+  if (busy) return;
+  const n = norm(text);
+  if (/^(ملفي|profile)$/.test(n)) { openSheet(); return; }
+  if (/^(reset|ابدا|من جديد)$/.test(n)) { restart(true); return; }
+  if (pending) {
+    if (isSkip(text)) return skip(pending);
+    if (pending.type === 'text') {
+      const w = text.trim().slice(0, 60); pending = null;
+      answers['dish.wishes'] = answers['dish.wishes'] || []; answers['dish.wishes'].push(w); saveAnswers();
+      await say(phrase('wish_ack'), 400); return afterSearch();
+    }
+    const vals = parseOptions(pending, text);
+    if (!vals.length) { await say(phrase('retry'), 400); return showChips(pending); }
+    return choose(pending, vals);
+  }
+  const hits = parseOptions(Q('core.interests'), text);
+  if (hits.length && hits.length < KINDS.length) { await search(hits[0]); return afterSearch(); }
+  await say(phrase('idle'), 400); offerKinds();
+}
+
+/* =====================================================================
+   6) PLACES SEARCH  (OpenStreetMap through Overpass; preferences re-rank the results)
+   ===================================================================== */
+const OSM = {
+  restaurant: 'nwr["amenity"~"restaurant|fast_food|food_court"]', cafe: 'nwr["amenity"~"cafe|ice_cream"]',
+  culture: 'nwr["tourism"~"museum|gallery|attraction"]', outdoors: 'nwr["leisure"~"park|garden"]'
+};
+const ICON = { restaurant: '🍴', cafe: '☕', culture: '🏛️', outdoors: '🌳' };
+/* Example places for the default city, used only when the live search cannot connect. Coordinates are approximate. */
+const SAMPLE = {
+  restaurant: [{ name: 'Can Culleretes', lat: 41.3809, lon: 2.1747, note: 'مطبخ كتالوني', tags: { cuisine: 'catalan' } }, { name: 'Bar del Pla', lat: 41.3853, lon: 2.1810, note: 'تاباس', tags: { cuisine: 'tapas' } }, { name: 'Els Quatre Gats', lat: 41.3860, lon: 2.1738, note: 'مقهى ومطعم' }],
+  cafe: [{ name: "Cafè de l'Òpera", lat: 41.3801, lon: 2.1733, note: 'مقهى على الرامبلا' }, { name: "Satan's Coffee Corner", lat: 41.3836, lon: 2.1759, note: 'قهوة مختصة' }, { name: 'Granja Viader', lat: 41.3816, lon: 2.1699, note: 'حليب وحلويات' }],
+  culture: [{ name: 'Barcelona Cathedral', lat: 41.3840, lon: 2.1762, note: 'كاتدرائية قوطية' }, { name: 'Museu Picasso', lat: 41.3852, lon: 2.1809, note: 'متحف' }, { name: 'Palau de la Música Catalana', lat: 41.3875, lon: 2.1753, note: 'قاعة موسيقى' }],
+  outdoors: [{ name: 'Parc de la Ciutadella', lat: 41.3881, lon: 2.1871, note: 'حديقة المدينة' }, { name: 'Jardins de Rubió i Lluch', lat: 41.3794, lon: 2.1695, note: 'حديقة' }]
+};
+function dist(a, b, c, d) {
+  const r = (n) => n * Math.PI / 180, dLa = r(c - a), dLo = r(d - b);
+  const q = Math.sin(dLa / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(dLo / 2) ** 2;
+  return 6371000 * 2 * Math.atan2(Math.sqrt(q), Math.sqrt(1 - q));
+}
+const fmt = (m) => m < 1000 ? `${ar(Math.round(m / 50) * 50)} م` : `${ar(+(m / 1000).toFixed(1))} كم`;
+function wanted(kind) {
+  const w = { cuisines: [], halal: false, outdoor: false };
+  if (kind === 'restaurant') { w.cuisines = (answers['food.cuisine'] || []); w.halal = answers['food.halal'] === 'yes'; }
+  if (kind === 'restaurant' || kind === 'cafe') w.outdoor = answers['core.seating'] === 'outdoor';
+  return w;
+}
+function rank(items, kind) {
+  const w = wanted(kind), seen = new Set(), R = radius();
+  const osmSets = w.cuisines.map((v) => ({ v, set: Q('food.cuisine').options.find((o) => o.value === v).osm }));
+  return items.map((it) => {
+    const lat = it.lat ?? it.center?.lat, lon = it.lon ?? it.center?.lon;
+    const tags = it.tags || {};
+    const name = it.name || tags.name || tags['name:en'] || tags['name:es'];
+    if (!name || !Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    const key = `${it.type || 's'}/${it.id || name}`; if (seen.has(key)) return null; seen.add(key);
+    const cuis = String(tags.cuisine || '').toLowerCase().split(/[;,]/).map((s) => s.trim());
+    const why = []; let score = 0;
+    osmSets.forEach(({ v, set }) => { if (cuis.some((c) => set.includes(c))) { score += 3; why.push(label('food.cuisine', v)); } });
+    if (w.halal && tags['diet:halal'] === 'yes') { score += 4; why.push('حلال حسب OpenStreetMap'); }
+    if (w.outdoor && tags.outdoor_seating === 'yes') { score += 2; why.push('فيه جلسة برا'); }
+    return { name, lat, lon, tags, note: it.note, d: dist(pos.lat, pos.lon, lat, lon), score, why };
+  }).filter((p) => p && p.d <= R).sort((a, b) => b.score - a.score || a.d - b.d).slice(0, 3);
+}
+async function live(kind) {
+  const lat = +pos.lat.toFixed(4), lon = +pos.lon.toFixed(4);
+  const q = `[out:json][timeout:20];(${OSM[kind]}["name"](around:${radius()},${lat},${lon}););out center tags;`;
+  const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 9000);
+  try {
+    const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', Accept: 'application/json' }, body: 'data=' + encodeURIComponent(q), signal: ctl.signal });
+    if (!res.ok) throw new Error('status ' + res.status);
+    const json = await res.json(); if (!Array.isArray(json.elements)) throw new Error('bad');
+    return rank(json.elements, kind);
+  } finally { clearTimeout(to); }
+}
+function cards(kind, places, isLive) {
+  const w = wanted(kind);
+  const active = [...w.cuisines.map((v) => label('food.cuisine', v)), ...(w.halal ? ['حلال'] : []), ...(w.outdoor ? ['جلسة برا'] : [])];
+  const sec = document.createElement('section'); sec.className = 'results';
+  const body = places.length ? places.map((p) => {
+    const addr = [p.tags['addr:street'], p.tags['addr:housenumber']].filter(Boolean).join(' ') || p.note || p.tags.cuisine?.replaceAll(';', '، ') || label('core.interests', kind);
+    const hours = p.tags.opening_hours ? ` · ${esc(p.tags.opening_hours)}` : '';
+    const url = `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=18/${p.lat}/${p.lon}`;
+    return `<article class="card"><div class="ico">${ICON[kind]}</div><div class="info"><h3 dir="auto">${esc(p.name)}</h3><p dir="auto">${esc(addr)}${hours}</p>${p.why.length ? `<p class="why">${esc(p.why.join('، '))}</p>` : ''}</div>
+      <div class="meta"><b>${fmt(p.d)}</b><span class="src ${isLive ? 'live' : ''}">${isLive ? 'OpenStreetMap' : 'مثال'}</span><a href="${url}" target="_blank" rel="noreferrer">الخريطة ↗</a></div></article>`;
+  }).join('') : `<div class="bubble">${esc(phrase('none'))}</div>`;
+  let note = isLive ? 'بيانات الأماكن من OpenStreetMap. تأكد من ساعات العمل قبل ما تروح.' : 'هذي أماكن تجريبية عشان تجرب الفكرة. ساعات العمل غير معروضة وغير مؤكدة.';
+  if (places.length && active.length && !places.some((p) => p.why.length)) note += ` ما لقيت مكان موسوم بـ«${active.join('، ')}» في بيانات الخريطة هنا، فعرضت الأقرب.`;
+  const R = radius();
+  sec.innerHTML = `<div><h2>${ar(places.length)} ${places.length === 1 ? 'اقتراح قريب' : 'اقتراحات قريبة'}</h2><span class="sub">${esc(label('core.interests', kind))} · ضمن ${R < 1000 ? ar(R) + ' م' : ar(R / 1000) + ' كم'}${active.length ? ' · مرتبة على: ' + esc(active.join('، ')) : ''}</span></div>${body}<p class="note">${places.length ? esc(note) : ''}</p>`;
+  convo().appendChild(sec); scroll();
+}
+async function search(kind) {
+  busy = true; lastKind = kind;
+  await say(`لحظة، أدور لك على ${label('core.interests', kind)} قريب من ${pos.label === 'central Barcelona' ? 'وسط برشلونة' : 'موقعك'}…`, 600);
+  try { cards(kind, await live(kind), true); }
+  catch (e) {
+    if (pos.label === 'central Barcelona') { if (!session.warned) { session.warned = true; sys('البحث المباشر ما اتصل من هذي الصفحة، فأعرض لك أماكن تجريبية.'); } cards(kind, rank(SAMPLE[kind], kind), false); }
+    else sys('البحث المباشر ما اتصل من هذي الصفحة، وما عندي أمثلة لمكانك.');
+  }
+  busy = false;
+}
+
+/* =====================================================================
+   7) PROFILE SHEET  (answers, completion, locked questions, and the raw structure)
+   ===================================================================== */
+function openSheet() {
+  const pct = completion();
+  const core = QUESTIONS.filter((q) => q.scope === 'core');
+  const rows = core.map((q) => {
+    const on = applies(q), v = answers[q.id];
+    const txt = !on ? 'يظهر حسب اهتماماتك' : answered(q.id) ? (Array.isArray(v) ? v : [v]).map((x) => label(q.id, x)).join('، ') : 'ما جاوبت بعد';
+    return `<div class="row"><div class="t"><b>${esc(q.title)}${q.sensitive ? ' · اختياري' : ''}</b><span>${esc(txt)}</span></div>
+      <span class="w">${ar(q.weight)}٪ وزن</span>${on ? `<button type="button" data-q="${q.id}">${answered(q.id) ? 'غيّر' : 'جاوب'}</button>` : ''}</div>`;
+  }).join('');
+  const ctxRows = ['ctx.mode', 'ctx.time'].map((id) => `<div class="row"><div class="t"><b>${esc(Q(id).title)} (لهذي الجلسة)</b><span>${session[id] ? esc(label(id, session[id])) : 'ما جاوبت بعد'}</span></div></div>`).join('');
+  const names = (id) => (answers[id] || []).map((i) => dishById(i)?.ar).filter(Boolean).join('، ');
+  const elig = eligibleDishes(), done = elig.filter((d) => (answers['dish.likes'] || []).includes(d.id) || (answers['dish.avoid'] || []).includes(d.id)).length;
+  const dishInfo = !answered('core.allergy') ? 'تظهر بعد ما تجاوب على سؤال الحساسية.' : !elig.length ? 'ما عندي أطباق موثقة لنوع الأكل اللي اخترته بعد. الموثّق حالياً: الأكل المحلي والبحري في برشلونة.' : `سألتك عن ${ar(done)} من ${ar(elig.length)} أطباق مناسبة لك.`;
+  const locked = LOCKED.map((l) => `<div>${esc(l.title)}: ${esc(l.reason)}</div>`).join('');
+  $('#sheetBody').innerHTML = `
+    <div><div class="big"><b>${ar(pct)}٪</b><span>رفيق يعرف ذوقك</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>
+    <div><h3>الجلسة الحالية</h3>${ctxRows}</div>
+    <div><h3>ذوقك المحفوظ</h3>${rows}</div>
+    <div><h3>المستوى التفصيلي: الأطباق</h3>
+      <div class="row"><div class="t"><b>تحب تجربة</b><span>${esc(names('dish.likes') || 'ما حددت بعد')}</span></div></div>
+      <div class="row"><div class="t"><b>مو لك</b><span>${esc(names('dish.avoid') || 'ما حددت بعد')}</span></div></div>
+      <div class="row"><div class="t"><b>في بالك</b><span>${esc((answers['dish.wishes'] || []).join('، ') || '—')}</span></div></div>
+      <p class="note">${esc(dishInfo)} المكونات والحساسية تقدير مني مو من المصدر، فاسأل المطعم دايماً.</p></div>
+    <div><h3>أسئلة مؤجلة</h3><div class="locked">${locked}<div>ما نسألها قبل ما نقدر نستفيد من جوابها.</div></div></div>
+    <details><summary>الهيكل (بنك الأسئلة والشخصية)</summary><pre>${esc(JSON.stringify({ questions: QUESTIONS, persona: PERSONA }, null, 1))}</pre></details>
+    <div><button class="tool" id="wipe" type="button">احذف ذوقي المحفوظ</button></div>`;
+  $('#sheetBody').querySelectorAll('button[data-q]').forEach((b) => b.addEventListener('click', () => {
+    $('#sheet').hidden = true; const q = Q(b.dataset.q); addUser(`أبي أغيّر: ${q.title}`); ask(q, false);
+  }));
+  $('#wipe').addEventListener('click', () => { answers = {}; saveAnswers(); $('#sheet').hidden = true; restart(false); });
+  $('#sheet').hidden = false;
+}
+
+/* =====================================================================
+   8) START / RESET
+   ===================================================================== */
+async function restart(clearAnswers) {
+  if (clearAnswers) { answers = {}; saveAnswers(); }
+  gen++; busy = false; pending = null; lastKind = null; selection = new Set();
+  session['ctx.mode'] = null; session['ctx.time'] = null; session.skip = new Set(); session.searched = false;
+  session.dishIntro = false; session.dishSearched = false; session.warned = false;
+  convo().innerHTML = ''; renderHeader();
+  const first = document.createElement('article'); first.className = 'msg';
+  first.innerHTML = '<div class="av" aria-hidden="true">ر</div><div class="bubble"></div>';
+  first.querySelector('.bubble').textContent = phrase(answered('core.interests') ? 'welcome_back' : 'greet');
+  convo().appendChild(first);
+  advance();
+}
+document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl';
+$('#form').addEventListener('submit', (e) => {
+  e.preventDefault(); const inp = $('#q'); const v = inp.value.trim(); inp.value = '';
+  if (!v || busy) return; addUser(v); handle(v);
+});
+$('#profBtn').addEventListener('click', openSheet);
+$('#closeSheet').addEventListener('click', () => { $('#sheet').hidden = true; renderHeader(); });
+$('#resetBtn').addEventListener('click', () => { if (!busy) restart(false); });
+restart(false);
+</script>
+</body>
+</html>
