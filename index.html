@@ -171,11 +171,11 @@ const QUESTIONS = [
       { value: 'free', label: 'الوقت مفتوح', words: ['مفتوح', 'كثير', 'طويل', 'فاضي', 'free'], radius: 3000 }] },
   { id: 'core.interests', scope: 'core', domain: 'taste', title: 'اهتماماتك', weight: 30, type: 'multi', intent: 'ask_interests', affects: 'filter', needsSource: 'osm',
     options: [
-      { value: 'restaurant', label: 'أكل', words: ['اكل', 'مطعم', 'مطاعم', 'عشا', 'غدا', 'فطور', 'جوعان', 'برجر', 'شاورما', 'eat', 'food', 'restaurant', 'dinner', 'lunch', 'hungry'] },
-      { value: 'cafe', label: 'قهوة وحلا', words: ['قهوه', 'كوفي', 'كافيه', 'مقهي', 'حلا', 'حلي', 'شاي', 'coffee', 'cafe', 'dessert', 'tea'] },
-      { value: 'culture', label: 'ثقافة ومعالم', words: ['متحف', 'ثقافه', 'معلم', 'معالم', 'فن', 'تاريخ', 'سياحه', 'museum', 'culture', 'sight', 'art', 'history'] },
-      { value: 'outdoors', label: 'طبيعة وجو حلو', words: ['طبيعه', 'حديقه', 'حدايق', 'مشي', 'هوا', 'بحر', 'منتزه', 'park', 'outdoor', 'nature', 'walk'] }],
-    anyWords: ['اي شي', 'كل شي', 'فاجئني', 'anything', 'surprise'] },
+      { value: 'restaurant', label: 'أكل', words: ['اكل', 'اكله', 'اكلات', 'وجبه', 'مطعم', 'مطاعم', 'عشا', 'غدا', 'فطور', 'اتعشي', 'اتغدي', 'افطر', 'جوعان', 'جوعانه', 'برجر', 'شاورما', 'eat', 'food', 'restaurant', 'dinner', 'lunch', 'hungry'] },
+      { value: 'cafe', label: 'قهوة وحلا', words: ['قهوه', 'قهوتي', 'كوفي', 'كافيه', 'مقهي', 'حلا', 'حلي', 'حلويات', 'شاي', 'كابتشينو', 'لاتيه', 'اشرب', 'coffee', 'cafe', 'dessert', 'tea'] },
+      { value: 'culture', label: 'ثقافة ومعالم', words: ['متحف', 'متاحف', 'ثقافه', 'معلم', 'معالم', 'فن', 'تاريخ', 'تاريخي', 'اثار', 'كاتدرائيه', 'سياحه', 'museum', 'culture', 'sight', 'sightseeing', 'art', 'history'] },
+      { value: 'outdoors', label: 'طبيعة وجو حلو', words: ['طبيعه', 'حديقه', 'حدايق', 'مشي', 'اتمشي', 'نتمشي', 'تمشي', 'هوا', 'بحر', 'شاطي', 'كورنيش', 'منتزه', 'park', 'outdoor', 'outdoors', 'nature', 'walk'] }],
+    anyWords: ['اي شي', 'كل شي', 'اي مكان', 'فاجئني', 'ما يفرق', 'anything', 'surprise'] },
   { id: 'food.cuisine', scope: 'core', domain: 'food', title: 'نوع الأكل', weight: 15, type: 'multi', intent: 'ask_cuisine', affects: 'ranking', needsSource: 'osm',
     requires: { interests: ['restaurant'] },
     options: [
@@ -188,32 +188,32 @@ const QUESTIONS = [
   { id: 'food.halal', scope: 'core', domain: 'food', title: 'الأكل الحلال', weight: 15, type: 'single', intent: 'ask_halal', affects: 'ranking', needsSource: 'osm',
     sensitive: true, requires: { interests: ['restaurant'] },
     options: [
-      { value: 'yes', label: 'أفضّل الحلال', words: ['حلال', 'نعم', 'ايوه', 'yes', 'halal'] },
-      { value: 'any', label: 'ما يفرق', words: ['ما يفرق', 'عادي', 'لا', 'no', 'any'] }] },
+      { value: 'yes', label: 'أفضّل الحلال', words: ['حلال', 'نعم', 'ايوه', 'ايه', 'اكيد', 'yes', 'halal'] },
+      { value: 'any', label: 'ما يفرق', words: ['ما يفرق', 'ما يهم', 'مو لازم', 'مب لازم', 'مو شرط', 'مو حلال', 'عادي', 'لا', 'no', 'any'] }] },
   { id: 'core.allergy', scope: 'core', domain: 'food', title: 'الحساسية', weight: 10, type: 'multi', intent: 'ask_allergy', affects: 'dishes',
     sensitive: true, requires: { interests: ['restaurant'] },
     options: [
-      { value: 'shellfish', label: 'قشريات', words: ['قشريات', 'جمبري', 'روبيان', 'كابوريا', 'shrimp', 'crab', 'shellfish', 'lobster'] },
+      { value: 'shellfish', label: 'قشريات', words: ['قشريات', 'جمبري', 'روبيان', 'ربيان', 'كابوريا', 'شريمب', 'shrimp', 'crab', 'shellfish', 'lobster'] },
       { value: 'molluscs', label: 'رخويات (حبار، محار)', words: ['رخويات', 'حبار', 'اخطبوط', 'محار', 'سبيط', 'squid', 'octopus', 'mussels', 'clam'] },
       { value: 'fish', label: 'سمك', words: ['سمك', 'fish'] },
       { value: 'nuts', label: 'مكسرات', words: ['مكسرات', 'فستق', 'لوز', 'صنوبر', 'nuts', 'peanut'] },
       { value: 'gluten', label: 'جلوتين', words: ['جلوتين', 'قمح', 'gluten', 'wheat'] },
-      { value: 'none', label: 'ما عندي', words: ['ما عندي', 'لا شي', 'مافي', 'none', 'no'] }] },
+      { value: 'none', label: 'ما عندي', words: ['ما عندي', 'ما اتحسس', 'ما اعاني', 'لا شي', 'ولا شي', 'مافي', 'ما في', 'none', 'no'] }] },
   { id: 'core.seating', scope: 'core', domain: 'food', title: 'الجلسة', weight: 10, type: 'single', intent: 'ask_seating', affects: 'ranking', needsSource: 'osm',
     requires: { interests: ['restaurant', 'cafe'] },
     options: [
-      { value: 'outdoor', label: 'أفضّل جلسة برا', words: ['برا', 'خارج', 'outdoor', 'outside'] },
+      { value: 'outdoor', label: 'أفضّل جلسة برا', words: ['برا', 'بره', 'خارج', 'الهواء الطلق', 'outdoor', 'outside'] },
       { value: 'any', label: 'ما يفرق', words: ['ما يفرق', 'عادي', 'اي مكان', 'any'] }] },
   { id: 'core.pace', scope: 'core', domain: 'style', title: 'إيقاعك', weight: 10, type: 'single', intent: 'ask_pace', affects: 'order',
     options: [
-      { value: 'relaxed', label: 'هادي ومرتاح', words: ['هادي', 'مرتاح', 'بطيء', 'relaxed', 'calm', 'slow'] },
-      { value: 'active', label: 'نشيط', words: ['نشيط', 'حماس', 'متحرك', 'active', 'busy'] }] },
+      { value: 'relaxed', label: 'هادي ومرتاح', words: ['هادي', 'هاديه', 'هادئ', 'هدوء', 'مرتاح', 'رايق', 'بطيء', 'بعيد عن الزحمه', 'ما فيه زحمه', 'مو زحمه', 'مب زحمه', 'بدون زحمه', 'relaxed', 'calm', 'quiet', 'peaceful', 'chill', 'slow'] },
+      { value: 'active', label: 'نشيط', words: ['نشيط', 'حماس', 'متحرك', 'حركه', 'active', 'busy', 'lively'] }] },
   { id: 'core.company', scope: 'core', domain: 'style', title: 'المرافقين', weight: 10, type: 'single', intent: 'ask_company', affects: 'order',
     options: [
-      { value: 'alone', label: 'لحالي', words: ['لحالي', 'وحدي', 'لوحدي', 'alone', 'solo'] },
-      { value: 'friends', label: 'مع الأصحاب', words: ['اصحاب', 'اصدقاء', 'ربع', 'صديق', 'friends'] },
-      { value: 'family', label: 'مع العايلة', words: ['عايله', 'عائله', 'عيال', 'اهل', 'اطفال', 'family', 'kids'] },
-      { value: 'partner', label: 'مع شريكي', words: ['شريك', 'زوج', 'زوجه', 'خطيب', 'حبيب', 'partner', 'wife', 'husband'] }] }
+      { value: 'alone', label: 'لحالي', words: ['لحالي', 'وحدي', 'لوحدي', 'بروحي', 'alone', 'solo'] },
+      { value: 'friends', label: 'مع الأصحاب', words: ['اصحاب', 'اصحابي', 'اصدقاء', 'ربع', 'ربعي', 'شلتي', 'اخواني', 'زملائي', 'صديق', 'صديقي', 'friends'] },
+      { value: 'family', label: 'مع العايلة', words: ['عايله', 'عايلتي', 'عائله', 'عائلتي', 'عيال', 'عيالي', 'اولادي', 'بناتي', 'اهل', 'اهلي', 'امي', 'ابوي', 'اطفال', 'family', 'kids', 'children'] },
+      { value: 'partner', label: 'مع شريكي', words: ['شريك', 'شريكي', 'زوج', 'زوجي', 'زوجه', 'زوجتي', 'مرتي', 'حرمتي', 'خطيب', 'خطيبي', 'خطيبتي', 'حبيب', 'حبيبي', 'حبيبتي', 'رومانسي', 'رومانسيه', 'موعد', 'romantic', 'date', 'partner', 'wife', 'husband', 'girlfriend', 'boyfriend'] }] }
 ];
 /* Questions we do not ask yet because no current data source can use the answer. */
 const LOCKED = [
@@ -251,18 +251,18 @@ const PERSONA = {
   phrases: {
     greet: ['هلا والله! أنا رفيق. أحب أعرف ذوقك عشان ترشيحاتي تجي على مزاجك فعلاً. بسألك على مهل، وتقدر تقول «بعدين» لأي سؤال.'],
     welcome_back: ['أهلاً فيك من جديد! ذوقك محفوظ عندي. بس أتأكد من وضعك اليوم.'],
-    ask_mode: ['قبل لا أرشح لك شي، وين أنت الحين؟ يوم عادي، إجازة، ولا رحلة شغل؟'],
+    ask_mode: ['قبل لا أرشح لك شي، وين أنت الحين؟ يوم عادي، إجازة، ولا رحلة شغل؟', 'أبي أعرف وضعك الحين: يوم عادي، إجازة، ولا رحلة شغل؟'],
     ask_time: {
       daily: ['كم عندك وقت اليوم؟ عشان أرشح لك على قدره.'],
       vacation: ['يا حظك! كم بتتمشى اليوم؟ عشان أوزع لك الأماكن على قدر وقتك.'],
       work: ['الله يعطيك العافية! كم ساعة فاضية عندك؟ أبي أرشح لك شي ما يتعبك.']
     },
-    ask_interests: ['وش اللي ياخذ عقلك؟ اختر أكثر من شي وبعدين اضغط «تمام»، أو اكتب بكلامك.'],
-    ask_cuisine: ['أكيد بنأكل. وش نوع الأكل اللي تميل له؟ اختر اللي تبي.'],
-    ask_halal: ['عشان أرتب لك الأماكن صح: تفضّل الأكل الحلال؟ جاوب لو تحب، وتقدر تتخطى.'],
-    ask_seating: ['تحب تجلس برا لو الجو حلو؟'],
-    ask_pace: ['وإيقاعك في الطلعة؟ تحب هادي ومرتاح ولا نشيط وحركة؟'],
-    ask_company: ['ومع مين تطلع غالباً؟'],
+    ask_interests: ['وش اللي ياخذ عقلك؟ اختر أكثر من شي وبعدين اضغط «تمام»، أو اكتب بكلامك.', 'وش تحب تسوي الحين؟ أكل، قهوة، معالم، ولا طبيعة؟ اختر أو اكتب بكلامك.'],
+    ask_cuisine: ['أكيد بنأكل. وش نوع الأكل اللي تميل له؟ اختر اللي تبي.', 'أي نوع أكل يعجبك؟ اختر واحد أو أكثر.'],
+    ask_halal: ['عشان أرتب لك الأماكن صح: تفضّل الأكل الحلال؟ جاوب لو تحب، وتقدر تتخطى.', 'تبي أرتب لك الأماكن الحلال أول؟'],
+    ask_seating: ['تحب تجلس برا لو الجو حلو؟', 'تفضّل الجلسة برا ولا ما يفرق؟'],
+    ask_pace: ['وإيقاعك في الطلعة؟ تحب هادي ومرتاح ولا نشيط وحركة؟', 'تميل للهدوء والراحة ولا للنشاط والحركة؟'],
+    ask_company: ['ومع مين تطلع غالباً؟', 'غالباً تطلع لحالك ولا مع أحد؟'],
     ask_allergy: ['قبل لا أقترح لك أطباق: في شي ما تقدر تاكله أو تتحسس منه؟ اختياري، وجوابك يبقى على جهازك بس.'],
     dish_intro: ['في برشلونة فيه أطباق معروفة لنوع الأكل اللي تحبه. نمشي عليها واحد واحد.'],
     dish_next: ['وهذا طبق ثاني:', 'طبق ثاني:'],
@@ -271,12 +271,19 @@ const PERSONA = {
     wish_ack: ['سجلتها. لما نربط التعليقات أدور عليها لك.'],
     ack: ['تمام.', 'حلو!', 'أبشر.', 'ممتاز.', 'زين.'],
     skip_ack: ['ولا يهمك، نرجع له بعدين.', 'على راحتك.'],
-    retry: ['ما مسكتها زين. اختر من الخيارات تحت، أو قل «بعدين».'],
+    retry: ['اختر شي واحد على الأقل ثم اضغط «تمام».'],
+    understood: ['فهمت: {x}.', 'تمام، سجلت: {x}.', 'حلو، {x}.'],
+    clarify_1: ['ما فهمت قصدك بالضبط. تقصد واحد من هذي:'],
+    clarify_2: ['للأسف للحين ما قدرت أفهمها. اضغط على أحد الخيارات تحت، أو قل «بعدين» ونكمل.'],
+    clarify_giveup: ['خلنا نتخطى هذا السؤال ونكمل، وتقدر ترجع له من «ملفي» في أي وقت.'],
+    greet_back: ['هلا والله! خلنا نكمل.'],
+    hint_time: ['اكتب مثلاً: «ساعة»، «ساعتين»، «نص ساعة» أو «يوم كامل».'],
+    hint_interests: ['اكتب مثلاً: «قهوة»، «مطعم»، «حديقة» أو «متحف».'],
     lead_in: ['سؤال سريع يضبط ترشيحاتي الجاية:', 'عشان أعرفك أكثر:'],
     rerank: ['خلني أرتب لك النتائج من جديد على ذوقك.'],
     more: ['تبي أدور على شي ثاني؟'],
     none: ['ما لقيت أماكن مسماة على الخريطة قريبة من هنا لهذا النوع. جرب نوع ثاني.'],
-    idle: ['أفهمك أكثر لو قلت لي النوع: أكل، قهوة، ثقافة، أو طبيعة.']
+    idle: ['أفهمك أكثر لو قلت لي النوع: أكل، قهوة، ثقافة، أو طبيعة.', 'ما قدرت أفهمها. جرب تكتب مثل «أبغى قهوة» أو «مكان هادي مع الأهل»، أو اختر من تحت.', 'للحين ما وصلتني. اختر نوع من الأزرار تحت، أو افتح «ملفي» وعدّل ذوقك من هناك.']
   }
 };
 const lastPick = {};
@@ -292,10 +299,21 @@ function phrase(key, sub) {
    3) USER PROFILE  (answers only; context is per session, core is saved)
    ===================================================================== */
 let answers = {};                       // core answers: { 'core.interests': ['cafe'], ... }
-const session = { 'ctx.mode': null, 'ctx.time': null, skip: new Set(), searched: false };
-let pending = null, lastKind = null, busy = false, gen = 0, selection = new Set();
+const session = { 'ctx.mode': null, 'ctx.time': null, skip: new Set(), searched: false, miss: {}, idle: 0 };
+let pending = null, pendingExtra = false, lastKind = null, busy = false, gen = 0, selection = new Set(), chain = Promise.resolve();
+const CANCEL = { cancelled: true };
 const pos = { lat: 41.3851, lon: 2.1734, label: 'central Barcelona' };
 const Q = (id) => QUESTIONS.find((q) => q.id === id);
+/* One thing at a time: typed messages and button taps wait in line, so a fast second message never answers the wrong question. */
+function run(fn, guard) {
+  const my = gen;
+  chain = chain.then(async () => {
+    if (my !== gen) return;
+    try { if (guard && !guard()) return; await fn(); }
+    catch (e) { if (e !== CANCEL) console.error(e); }
+  });
+  return chain;
+}
 const answered = (id) => { const v = answers[id]; return Array.isArray(v) ? v.length > 0 : !!v; };
 try { const s = JSON.parse(localStorage.getItem('rafiq.answers.v2') || 'null'); if (s && typeof s === 'object') answers = s; } catch (e) {}
 const saveAnswers = () => { try { localStorage.setItem('rafiq.answers.v2', JSON.stringify(answers)); } catch (e) {} };
@@ -357,16 +375,115 @@ function orderedKinds() {
 
 /* ---------- Normalising and matching free text ---------- */
 const norm = (s) => String(s).toLowerCase().replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي')
-  .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-function wordHit(n, tokens, w) { const x = norm(w); return x.length <= 2 ? tokens.includes(x) : n.includes(x); }
+  .replace(/ؤ/g, 'و').replace(/ئ/g, 'ي').replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+  .replace(/(\p{L})\1{2,}/gu, '$1').replace(/[^\p{L}\p{N}\s.]/gu, ' ').replace(/(?<!\d)\.|\.(?!\d)/g, ' ').replace(/\s+/g, ' ').trim();
+/* Negation: words right after مو / ما / لا / بدون are ignored, so «ما أبي بحري» does not select seafood. */
+const NEG = new Set(['مو', 'مب', 'ما', 'لا', 'بدون', 'غير', 'مابي', 'مابغي', 'ماني']);
+function maskNeg(toks) {
+  const out = toks.slice();
+  toks.forEach((t, i) => { if (NEG.has(t)) for (let k = 1; k <= 2; k++) { const j = i + k; if (j < toks.length && !NEG.has(toks[j])) out[j] = ''; } });
+  return out;
+}
+/* Arabic clitics: «والقهوة» «بالمطعم» «للمتحف» still match «قهوه» «مطعم» «متحف». Short words must match exactly. */
+function forms(t) {
+  const s = new Set([t]);
+  const m = t.match(/^(?:وال|بال|فال|كال|لل|ال|و|ف|ب|ل|ك)(.+)$/);
+  if (m && m[1].length >= 3) s.add(m[1]);
+  return s;
+}
+function matchTok(t, x) {
+  if (!t) return false;
+  if (t === x) return true;
+  if (/^[a-z]/.test(x)) return x.length >= 4 && t.startsWith(x);
+  return x.length >= 3 && forms(t).has(x);
+}
+function prep(text, q) {
+  const n = norm(text), toks = n.split(' ').filter(Boolean);
+  return { n, toks: q && q.id === 'core.allergy' ? toks : maskNeg(toks) };   // allergy answers are never masked: when unsure, we exclude more, not less
+}
+function wHit(P, w) {
+  const x = norm(w);
+  if (x.includes(' ')) return (' ' + P.n + ' ').includes(' ' + x + ' ');
+  return P.toks.some((t) => matchTok(t, x));
+}
 function parseOptions(q, text) {
-  const n = norm(text), tokens = n.split(/\s+/);
-  if (q.anyWords && q.anyWords.some((w) => wordHit(n, tokens, w))) return q.options.map((o) => o.value);
-  const hits = q.options.filter((o) => o.words.some((w) => wordHit(n, tokens, w))).map((o) => o.value);
+  const P = typeof text === 'string' ? prep(text, q) : text;
+  if (q.anyWords && q.anyWords.some((w) => wHit(P, w))) return q.options.map((o) => o.value);
+  const hits = q.options.filter((o) => o.words.some((w) => wHit(P, w))).map((o) => o.value);
   return q.type === 'multi' ? hits : hits.slice(0, 1);
 }
-const SKIP_WORDS = ['بعدين', 'تخطي', 'تخطى', 'skip', 'later', 'ما ابي', 'مو الحين'];
-const isSkip = (text) => { const n = norm(text); return SKIP_WORDS.some((w) => n.includes(norm(w))); };
+
+/* Time: «ساعة وحدة» «ساعتين» «نص ساعة» «3 ساعات» «يوم كامل». Returns minutes (or null) and the text without the time phrase. */
+const NUMW = { وحده: 1, واحده: 1, واحد: 1, وحد: 1, ثنتين: 2, اثنين: 2, ثلاث: 3, ثلاثه: 3, اربع: 4, اربعه: 4, خمس: 5, خمسه: 5, ست: 6, سته: 6 };
+function parseTime(n) {
+  const B = '(?:^|\\s)', E = '(?=\\s|$)';
+  const take = (re, f) => { const m = n.match(re); if (!m) return null; const rest = n.replace(m[0], ' ').replace(/\s+/g, ' ').trim(); return { min: f(m), rest }; };
+  const HR = '(?:ساعه|ساعات|hours?|hrs?|h)', MI = '(?:دقيقه|دقايق|دقائق|minutes?|mins?)';
+  const W = Object.keys(NUMW).join('|');
+  return take(new RegExp(B + '(?:طول اليوم|كل اليوم|يوم كامل|اليوم كله)' + E), () => 600)
+    || take(new RegExp(B + 'نص يوم' + E), () => 240)
+    || take(new RegExp(B + 'ساعه (?:و ?نص|ونص)' + E), () => 90)
+    || take(new RegExp(B + 'نص ساعه' + E), () => 30)
+    || take(new RegExp(B + 'ربع ساعه' + E), () => 15)
+    || take(new RegExp(B + '(\\d+(?:[.,]\\d+)?) ?' + HR + E), (m) => parseFloat(m[1].replace(',', '.')) * 60)
+    || take(new RegExp(B + '(\\d+) ?' + MI + E), (m) => parseInt(m[1], 10))
+    || take(new RegExp(B + 'ساعتين' + E), () => 120)
+    || take(new RegExp(B + '(' + W + ') ساعات' + E), (m) => NUMW[m[1]] * 60)
+    || take(new RegExp(B + 'ساعه (?:وحده|واحده|واحد|وحد)' + E), () => 60)
+    || take(new RegExp(B + 'ساعه' + E), () => 60)
+    || { min: null, rest: n };
+}
+const bucket = (min) => (min <= 60 ? 'quick' : min <= 240 ? 'normal' : 'free');
+function parseFor(q, text) {
+  if (q.id === 'ctx.time') { const t = parseTime(norm(text)); if (t.min != null) return [bucket(t.min)]; }
+  return parseOptions(q, text);
+}
+
+/* Skip: «بعدين» alone skips; «ما أبي بحري» does not. */
+const SKIP_WORDS = ['بعدين', 'تخطي', 'تخطى', 'skip', 'later', 'ما ابي', 'ما ابغي', 'مو الحين', 'مب الحين', 'بعد شوي', 'مدري', 'ما ادري'];
+const FILLER = new Set(['شي', 'الحين', 'الان', 'هذا', 'هذي', 'السؤال', 'ذا', 'لو', 'سمحت', 'من', 'فضلك', 'تكفي', 'يا', 'رفيق', 'والله', 'بس', 'خلنا', 'نرجع', 'له', 'لها', 'عنه', 'ابي', 'ابغي', 'شكرا', 'لا', 'طيب', 'اوكي', 'ok', 'okay', 'هسه', 'الحين']);
+function isSkip(text, q) {
+  const n = norm(text);
+  return SKIP_WORDS.some((w) => {
+    const x = norm(w);
+    if (q && q.scope === 'dish' && (x === 'ما ابي' || x === 'ما ابغي')) return false;   // for a dish, «ما أبي» means no
+    const hit = (' ' + n + ' ').includes(' ' + x + ' ');
+    if (!hit) return false;
+    const rest = (' ' + n + ' ').replace(' ' + x + ' ', ' ').split(' ').filter((t) => t && !FILLER.has(t));
+    return rest.length === 0;
+  });
+}
+const isGreeting = (text) => { const n = norm(text); return n.split(' ').length <= 4 && /(^| )(هلا|اهلا|مرحبا|سلام|السلام عليكم|هاي|hi|hello|يا هلا|صباح الخير|مساء الخير)( |$)/.test(n); };
+
+/* Facts mentioned outside the question being asked: «شي رومانسي مع زوجتي» says company even while we ask about interests. */
+const ALLERGY_CUES = ['حساسيه', 'تحسس', 'اتحسس', 'يتحسس', 'ما اقدر اكل', 'ما اكل', 'ممنوع', 'allergic', 'allergy'];
+function extractOthers(text, pq, mainHit) {
+  const n0 = norm(text), t = parseTime(n0), got = [];
+  const P = prep(t.rest, null);
+  const skipQ = (id) => pq && pq.id === id;
+  if (t.min != null && !skipQ('ctx.time')) { const v = bucket(t.min); session['ctx.time'] = v; got.push(label('ctx.time', v)); }
+  const only = (id, val, words) => { const o = Q(id).options.find((x) => x.value === val); return (words || o.words).some((w) => wHit(P, w)); };
+  ['core.company', 'core.pace'].forEach((id) => { if (skipQ(id)) return; const h = parseOptions(Q(id), P); if (h.length === 1) { answers[id] = h[0]; got.push(label(id, h[0])); } });
+  if (!skipQ('food.halal') && only('food.halal', 'yes', ['حلال', 'halal'])) { answers['food.halal'] = 'yes'; got.push('حلال'); }
+  if (!skipQ('core.seating') && only('core.seating', 'outdoor')) { answers['core.seating'] = 'outdoor'; got.push(label('core.seating', 'outdoor')); }
+  const aq = Q('core.allergy'), PA = prep(t.rest, aq);
+  if (!skipQ('core.allergy') && ALLERGY_CUES.some((w) => wHit(PA, w))) {
+    const al = parseOptions(aq, PA).filter((v) => v !== 'none');
+    if (al.length) { answers['core.allergy'] = al; got.push('حساسية: ' + al.map((v) => label('core.allergy', v)).join('، ')); }
+  }
+  if (!mainHit || !(pq && pq.scope === 'context')) {
+    if (!skipQ('core.interests') && !answered('core.interests')) {
+      const h = parseOptions(Q('core.interests'), P);
+      if (h.length && h.length < KINDS.length) { answers['core.interests'] = h; got.push(h.map((v) => label('core.interests', v)).join('، ')); }
+    }
+    if (!skipQ('food.cuisine') && !answered('food.cuisine') && (answers['core.interests'] || []).includes('restaurant')) {
+      const h = parseOptions(Q('food.cuisine'), P);
+      if (h.length) { answers['food.cuisine'] = h; got.push(h.map((v) => label('food.cuisine', v)).join('، ')); }
+    }
+  }
+  if (got.length) { saveAnswers(); renderHeader(); }
+  return got;
+}
 
 /* =====================================================================
    4) CHAT UI
@@ -385,7 +502,7 @@ async function say(text, delay = 600) {
   d.innerHTML = '<div class="av" aria-hidden="true">ر</div><div class="bubble"><span class="dots"><i></i><i></i><i></i></span></div>';
   convo().appendChild(d); scroll();
   await sleep(delay);
-  if (my !== gen) { d.remove(); return; }
+  if (my !== gen) { d.remove(); throw CANCEL; }
   d.querySelector('.bubble').textContent = text; scroll();
 }
 function sys(text) { const p = document.createElement('p'); p.className = 'sys'; p.textContent = text; convo().appendChild(p); scroll(); }
@@ -434,16 +551,16 @@ function showChips(q, extra) {
   selection = new Set(q.scope === 'core' && Array.isArray(answers[q.id]) ? answers[q.id] : []);
   const items = (q.options || []).map((o) => q.type === 'multi'
     ? { label: o.label, value: o.value, toggle: true }
-    : { label: o.label, onClick: () => { addUser(o.label); choose(q, [o.value]); } });
+    : { label: o.label, onClick: () => { addUser(o.label); run(() => choose(q, [o.value]), () => pending === q); } });
   if (q.type === 'multi') items.push({ label: 'تمام', cls: 'go', onClick: () => {
-    const vals = [...selection]; if (!vals.length) { say(phrase('retry'), 300); return; }
-    addUser(vals.map((v) => label(q.id, v)).join('، ')); choose(q, vals); } });
-  if (q.scope === 'core' || q.scope === 'dish' || q.id === 'ctx.time') items.push({ label: 'بعدين', cls: 'ghost', onClick: () => { addUser('بعدين'); skip(q); } });
-  if (extra) items.push({ label: 'دور لي على شي ثاني', cls: 'ghost', onClick: () => { addUser('دور لي على شي ثاني'); pending = null; offerKinds(); } });
+    const vals = [...selection]; if (!vals.length) { run(() => say(phrase('retry'), 300)); return; }
+    addUser(vals.map((v) => label(q.id, v)).join('، ')); run(() => choose(q, vals), () => pending === q); } });
+  if (q.scope === 'core' || q.scope === 'dish' || q.id === 'ctx.time') items.push({ label: 'بعدين', cls: 'ghost', onClick: () => { addUser('بعدين'); run(() => skip(q), () => pending === q); } });
+  if (extra) items.push({ label: 'دور لي على شي ثاني', cls: 'ghost', onClick: () => { addUser('دور لي على شي ثاني'); run(() => { if (pending !== q) return; pending = null; return offerKinds(); }); } });
   addChips(items);
 }
 async function ask(q, extra) {
-  pending = q;
+  pending = q; pendingExtra = !!extra;
   await say(promptFor(q), 550);
   if (pending === q) { if (q.dish) dishNote(q.dish); showChips(q, extra); }
 }
@@ -469,7 +586,7 @@ async function chooseDish(q, v) {
   return afterSearch();
 }
 async function choose(q, values) {
-  pending = null;
+  pending = null; session.miss[q.id] = 0; session.skip.delete(q.id);
   if (q.scope === 'dish') return chooseDish(q, values[0]);
   if (values.includes('none') && values.length > 1) values = values.filter((v) => v !== 'none');
   if (q.scope === 'context') session[q.id] = values[0];
@@ -480,16 +597,16 @@ async function choose(q, values) {
   if (q.affects === 'ranking' && lastKind) { await say(phrase('rerank'), 400); await search(lastKind); }
   return afterSearch();
 }
-async function skip(q) {
+async function skip(q, quiet) {
   pending = null; session.skip.add(q.id);
   if (q.id === 'ctx.mode') session['ctx.mode'] = 'daily';
-  await say(phrase('skip_ack'), 350);
+  if (!quiet) await say(phrase('skip_ack'), 350);
   return session.searched ? afterSearch() : advance();
 }
 async function advance() {
   if (!session['ctx.mode']) return ask(Q('ctx.mode'));
   if (!session['ctx.time'] && !session.skip.has('ctx.time')) return ask(Q('ctx.time'));
-  if (!answered('core.interests')) return ask(Q('core.interests'));
+  if (!answered('core.interests') && !session.skip.has('core.interests')) return ask(Q('core.interests'));
   if (!session.searched) { session.searched = true; await search(orderedKinds()[0]); }
   return afterSearch();
 }
@@ -500,31 +617,66 @@ async function afterSearch() {
   if (dq) return ask(dq, true);
   return offerKinds();
 }
-async function offerKinds() {
-  await say(phrase('more'), 450);
+async function offerKinds(withMore = true) {
+  if (withMore) await say(phrase('more'), 450);
   const ks = orderedKinds().concat(KINDS.filter((k) => !(answers['core.interests'] || []).includes(k)));
-  addChips([...ks.filter((k) => k !== lastKind).slice(0, 3).map((k) => ({ label: label('core.interests', k), onClick: async () => { addUser(label('core.interests', k)); await search(k); afterSearch(); } })),
+  addChips([...ks.filter((k) => k !== lastKind).slice(0, 3).map(kindChip),
     { label: 'ملفي', cls: 'ghost', onClick: openSheet }]);
 }
+const kindChip = (k) => ({ label: label('core.interests', k), onClick: () => { addUser(label('core.interests', k)); run(async () => { await search(k); await afterSearch(); }); } });
+async function resume(q) {
+  pending = null;
+  const gone = q.dish ? !dishOk(q.dish) : (q.scope === 'core' && !applies(q));
+  if (gone) return session.searched ? afterSearch() : advance();
+  return ask(q, pendingExtra);
+}
+async function miss(q) {
+  const c = session.miss[q.id] = (session.miss[q.id] || 0) + 1;
+  if (c >= 3) { pending = null; await say(phrase('clarify_giveup'), 350); return skip(q, true); }
+  if (c === 1) {
+    const hint = q.id === 'ctx.time' ? phrase('hint_time') : q.id === 'core.interests' ? phrase('hint_interests') : '';
+    await say(hint ? `${phrase('clarify_1')} ${hint}` : `${phrase('clarify_1')} ${q.options.map((o) => o.label).join('، ')}؟`, 400);
+  } else await say(phrase('clarify_2'), 400);
+  if (pending === q) showChips(q, pendingExtra);
+}
+async function handlePending(text) {
+  const q = pending;
+  if (isSkip(text, q)) return skip(q);
+  if (q.type === 'text') {
+    const w = text.trim().slice(0, 60); pending = null;
+    answers['dish.wishes'] = answers['dish.wishes'] || []; answers['dish.wishes'].push(w); saveAnswers();
+    await say(phrase('wish_ack'), 400); return afterSearch();
+  }
+  const vals = parseFor(q, text);
+  const got = extractOthers(text, q, vals.length > 0);
+  if (vals.length) return choose(q, vals);
+  if (got.length) { await say(phrase('understood').replace('{x}', got.join('، ')), 400); return resume(q); }
+  if (isGreeting(text)) { await say(phrase('greet_back'), 350); return resume(q); }
+  return miss(q);
+}
+async function handleFree(text) {
+  const n = norm(text), t = parseTime(n);
+  const hits = parseOptions(Q('core.interests'), t.rest);
+  const got = extractOthers(text, null, false);
+  const kind = hits.length && hits.length < KINDS.length ? hits[0] : null;
+  if (!kind && !got.length) {
+    if (isGreeting(text)) { await say(phrase('greet_back'), 350); return offerKinds(); }
+    const c = session.idle = (session.idle || 0) + 1;
+    await say(PERSONA.phrases.idle[Math.min(c, PERSONA.phrases.idle.length) - 1], 400);
+    return offerKinds(false);
+  }
+  if (got.length) await say(phrase('understood').replace('{x}', got.join('، ')), 400);
+  session.idle = 0;
+  if (kind) { await search(kind); return afterSearch(); }
+  if (!session.searched) return advance();
+  await say(phrase('rerank'), 400); await search(lastKind || orderedKinds()[0]);
+  return afterSearch();
+}
 async function handle(text) {
-  if (busy) return;
   const n = norm(text);
   if (/^(ملفي|profile)$/.test(n)) { openSheet(); return; }
   if (/^(reset|ابدا|من جديد)$/.test(n)) { restart(true); return; }
-  if (pending) {
-    if (isSkip(text)) return skip(pending);
-    if (pending.type === 'text') {
-      const w = text.trim().slice(0, 60); pending = null;
-      answers['dish.wishes'] = answers['dish.wishes'] || []; answers['dish.wishes'].push(w); saveAnswers();
-      await say(phrase('wish_ack'), 400); return afterSearch();
-    }
-    const vals = parseOptions(pending, text);
-    if (!vals.length) { await say(phrase('retry'), 400); return showChips(pending); }
-    return choose(pending, vals);
-  }
-  const hits = parseOptions(Q('core.interests'), text);
-  if (hits.length && hits.length < KINDS.length) { await search(hits[0]); return afterSearch(); }
-  await say(phrase('idle'), 400); offerKinds();
+  return pending ? handlePending(text) : handleFree(text);
 }
 
 /* =====================================================================
@@ -600,10 +752,12 @@ function cards(kind, places, isLive) {
   convo().appendChild(sec); scroll();
 }
 async function search(kind) {
-  busy = true; lastKind = kind;
+  const my = gen; busy = true; lastKind = kind;
   await say(`لحظة، أدور لك على ${label('core.interests', kind)} قريب من ${pos.label === 'central Barcelona' ? 'وسط برشلونة' : 'موقعك'}…`, 600);
-  try { cards(kind, await live(kind), true); }
+  try { const found = await live(kind); if (my !== gen) { busy = false; throw CANCEL; } cards(kind, found, true); }
   catch (e) {
+    if (e === CANCEL) throw e;
+    if (my !== gen) { busy = false; throw CANCEL; }
     if (pos.label === 'central Barcelona') { if (!session.warned) { session.warned = true; sys('البحث المباشر ما اتصل من هذي الصفحة، فأعرض لك أماكن تجريبية.'); } cards(kind, rank(SAMPLE[kind], kind), false); }
     else sys('البحث المباشر ما اتصل من هذي الصفحة، وما عندي أمثلة لمكانك.');
   }
@@ -640,7 +794,7 @@ function openSheet() {
     <details><summary>الهيكل (بنك الأسئلة والشخصية)</summary><pre>${esc(JSON.stringify({ questions: QUESTIONS, persona: PERSONA }, null, 1))}</pre></details>
     <div><button class="tool" id="wipe" type="button">احذف ذوقي المحفوظ</button></div>`;
   $('#sheetBody').querySelectorAll('button[data-q]').forEach((b) => b.addEventListener('click', () => {
-    $('#sheet').hidden = true; const q = Q(b.dataset.q); addUser(`أبي أغيّر: ${q.title}`); ask(q, false);
+    $('#sheet').hidden = true; const q = Q(b.dataset.q); addUser(`أبي أغيّر: ${q.title}`); run(() => ask(q, false));
   }));
   $('#wipe').addEventListener('click', () => { answers = {}; saveAnswers(); $('#sheet').hidden = true; restart(false); });
   $('#sheet').hidden = false;
@@ -651,24 +805,24 @@ function openSheet() {
    ===================================================================== */
 async function restart(clearAnswers) {
   if (clearAnswers) { answers = {}; saveAnswers(); }
-  gen++; busy = false; pending = null; lastKind = null; selection = new Set();
+  gen++; chain = Promise.resolve(); busy = false; pending = null; lastKind = null; selection = new Set();
   session['ctx.mode'] = null; session['ctx.time'] = null; session.skip = new Set(); session.searched = false;
-  session.dishIntro = false; session.dishSearched = false; session.warned = false;
+  session.dishIntro = false; session.dishSearched = false; session.warned = false; session.miss = {}; session.idle = 0;
   convo().innerHTML = ''; renderHeader();
   const first = document.createElement('article'); first.className = 'msg';
   first.innerHTML = '<div class="av" aria-hidden="true">ر</div><div class="bubble"></div>';
   first.querySelector('.bubble').textContent = phrase(answered('core.interests') ? 'welcome_back' : 'greet');
   convo().appendChild(first);
-  advance();
+  run(advance);
 }
 document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl';
 $('#form').addEventListener('submit', (e) => {
   e.preventDefault(); const inp = $('#q'); const v = inp.value.trim(); inp.value = '';
-  if (!v || busy) return; addUser(v); handle(v);
+  if (!v) return; addUser(v); run(() => handle(v));
 });
 $('#profBtn').addEventListener('click', openSheet);
 $('#closeSheet').addEventListener('click', () => { $('#sheet').hidden = true; renderHeader(); });
-$('#resetBtn').addEventListener('click', () => { if (!busy) restart(false); });
+$('#resetBtn').addEventListener('click', () => { restart(false); });
 restart(false);
 </script>
 </body>
